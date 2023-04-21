@@ -32,9 +32,11 @@ public class SecurityConfig {
 				.loginProcessingUrl("/login")
 				.successHandler((request, response, authentication) -> {
 					log.debug("디버그 : 로그인 성공");
+					response.sendRedirect("/");
 				})
 				.failureHandler((request, response, exception) -> {
 					log.debug("디버그 : 로그인 실패: "+ exception.getMessage());
+					response.sendRedirect("/loginForm");
 				});
 
 		//3. 인증 권한 필터 설정 (s로 시작하는 주소로 들어오면 무조건 인증처리 해야함)
