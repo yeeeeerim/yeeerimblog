@@ -39,7 +39,7 @@ public class SecurityConfig {
 					response.sendRedirect("/loginForm");
 				});
 
-		//3. 인증 권한 필터 설정 (s로 시작하는 주소로 들어오면 무조건 인증처리 해야함)
+		//4. 인증 권한 필터 설정 (s로 시작하는 주소로 들어오면 무조건 인증처리 해야함)
 		http.authorizeRequests(
 				authorize ->authorize.antMatchers("/s/**").authenticated().anyRequest().permitAll()
 		);
