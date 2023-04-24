@@ -22,8 +22,9 @@ public class BoardQueryRepository {
 				.setMaxResults(SIZE)
 				.getResultList();
 
-
 		Long totalCount = em.createQuery("select count(b) from Board b",Long.class).getSingleResult();
 		return new PageImpl<>(boardListPS, PageRequest.of(page, SIZE), totalCount);
 	}
+
+
 }
