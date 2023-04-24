@@ -6,6 +6,5 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BoardRepository extends JpaRepository<Board,Long> {
-	@EntityGraph(attributePaths = "user")
-	Page<Board> findAll (Pageable pageable);
+
 }
