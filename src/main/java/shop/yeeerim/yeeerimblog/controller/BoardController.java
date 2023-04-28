@@ -25,10 +25,15 @@ public class BoardController {
 
 	//RestAPI 주소설계 규칙에서는 자원에 복수를 붙인다. boards 정석 !
 	@GetMapping({"/","board"})
-	public String main(@RequestParam(defaultValue = "0") Integer page, Model model){
+	public String main(
+			@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = " ") String keyword,
+			Model model
+	){
 
-		Page<Board> boardPG=boardService.글목록보기(page);
+		Page<Board> boardPG=boardService.글목록보기(page, keyword);
 		model.addAttribute("boardPG",boardPG);
+		model.addAttribute("keyword",keyword);
 		return "board/main";
 	}
 
