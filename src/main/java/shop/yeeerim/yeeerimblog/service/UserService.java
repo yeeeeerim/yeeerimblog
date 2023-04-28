@@ -7,12 +7,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import shop.yeeerim.yeeerimblog.core.exception.csr.ExceptionApi400;
 import shop.yeeerim.yeeerimblog.core.exception.ssr.Exception400;
 import shop.yeeerim.yeeerimblog.core.exception.ssr.Exception500;
 import shop.yeeerim.yeeerimblog.core.util.MyFileUtil;
 import shop.yeeerim.yeeerimblog.dto.user.UserRequest;
 import shop.yeeerim.yeeerimblog.model.user.User;
 import shop.yeeerim.yeeerimblog.model.user.UserRepository;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +30,16 @@ public class UserService {
 	@Transactional
 	public void 회원가입(UserRequest.JoinInDTO joinInDTO){
 		try{
-			// 1. 패스워드 암호화
+			//1. 유저네임 중복확인
+			Optional<User> userOP = userRepository.findByUsername(joinInDTO.getUsername());
+			if(userOP.isPresent()){
+				//로그(비정상 접근)
+
+				throw new ExceptionApi400("username", "유저네임이 중복되었어요");
+			}
+			// 2. 패스워드 암호화
 			joinInDTO.setPassword(passwordEncoder.encode(joinInDTO.getPassword()));
-			// 2.DB 저장
+			// 3.DB 저장 (고립성)
 			userRepository.save(joinInDTO.toEntity());
 		}catch (Exception e){
 			throw new RuntimeException("회원가입 오류 : "+e.getMessage());
@@ -53,6 +63,13 @@ public class UserService {
 			return userPS;
 		}catch (Exception e){
 			throw new Exception500("프로필 사진 등록 실패 : "+e.getMessage());
+		}
+	}
+
+	public void 유저네임중복체크(String username) {
+		Optional<User> userOP = userRepository.findByUsername(username);
+		if(userOP.isPresent()){
+			throw new ExceptionApi400("username", "유저네임이 중복되었어요");
 		}
 	}
 }

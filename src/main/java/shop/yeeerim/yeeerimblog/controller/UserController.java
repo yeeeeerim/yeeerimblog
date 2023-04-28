@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import shop.yeeerim.yeeerimblog.model.user.User;
 import shop.yeeerim.yeeerimblog.service.UserService;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor //의존성 주입
@@ -27,7 +29,7 @@ public class UserController {
 	// write(post) 행위 : 리소스/식별자 : save or delete or update
 	// read (get) : 리소스/식별자
 	@PostMapping("/join")
-	public String join(UserRequest.JoinInDTO joinInDTO){ //x-www-form-urlencoded
+	public String join(@Valid UserRequest.JoinInDTO joinInDTO, Errors errors){ //x-www-form-urlencoded
 		userService.회원가입(joinInDTO);
 		return "redirect:/loginForm";
 	}
