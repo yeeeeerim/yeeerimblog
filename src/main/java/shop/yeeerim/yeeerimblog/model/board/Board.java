@@ -17,6 +17,7 @@ public class Board {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="user_id")
 	private User user;
 	private String title;
 	@Lob //4GB

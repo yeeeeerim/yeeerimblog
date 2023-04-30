@@ -29,8 +29,10 @@
 
     <ul class="pagination mt-3 d-flex justify-content-center">
 
-        <li class="page-item ${boardPG.first ? "disabled" : ""}"><a class="page-link" href="/?page=${boardPG.number -1}?keyword=${keyword}">Previous</a></li>
-        <li class="page-item ${boardPG.last ? "disabled" : ""}"><a class="page-link" href="/?page=${boardPG.number +1}?keyword=${keyword}">Next</a></li>
+<%--        <li class="page-item ${boardPG.first ? "disabled" : ""}"><a class="page-link" href="?page=${boardPG.number -1}&keyword=${keyword}">Previous</a></li>--%>
+<%--        <li class="page-item ${boardPG.last ? "disabled" : ""}"><a class="page-link" href="?page=${boardPG.number +1}&keyword=${keyword}">Next</a></li>--%>
+    <li class="page-item ${boardPG.first ? "disabled" : ""}"><a class="page-link" href="/?page=${boardPG.number -1}&keyword=${param.keyword}">Previous</a></li>
+    <li class="page-item ${boardPG.last ? "disabled" : ""}"><a class="page-link" href="/?page=${boardPG.number +1}&keyword=${param.keyword}">Next</a></li>
     </ul>
 </div>
 

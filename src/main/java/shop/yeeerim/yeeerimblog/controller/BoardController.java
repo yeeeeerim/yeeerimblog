@@ -14,14 +14,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yeeerim.yeeerimblog.core.auth.MyUserDetails;
 import shop.yeeerim.yeeerimblog.dto.board.BoardRequest;
+import shop.yeeerim.yeeerimblog.dto.reply.ReplyResponseDTO;
 import shop.yeeerim.yeeerimblog.model.board.Board;
 import shop.yeeerim.yeeerimblog.service.BoardService;
+import shop.yeeerim.yeeerimblog.service.ReplyService;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
 public class BoardController {
 	private final BoardService boardService;
+	private final ReplyService replyService;
 
 	//RestAPI 주소설계 규칙에서는 자원에 복수를 붙인다. boards 정석 !
 	@GetMapping({"/","board"})
@@ -51,8 +56,16 @@ public class BoardController {
 	@GetMapping( "/board/{id}")
 	public String detail(@PathVariable Long id, Model model){
 		Board board = boardService.게시글상세보기(id);
+		List<ReplyResponseDTO> replyList=replyService.replyList(id);
 		model.addAttribute("board", board);
+		model.addAttribute("reply",replyList);
 		return "board/detail";
+	}
+
+	@PostMapping("/s/board/{id}/delete")
+	public String delete(@PathVariable Long id, @AuthenticationPrincipal MyUserDetails myUserDetails) {
+		boardService.게시글삭제(id, myUserDetails.getUser().getId());
+		return "redirect:/";
 	}
 
 

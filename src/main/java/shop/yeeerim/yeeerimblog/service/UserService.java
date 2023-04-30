@@ -19,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
 	@Value("${file.path}")
@@ -71,5 +72,13 @@ public class UserService {
 		if(userOP.isPresent()){
 			throw new ExceptionApi400("username", "유저네임이 중복되었어요");
 		}
+	}
+
+	public User 회원정보보기(Long id) {
+		Optional<User> userOP = userRepository.findById(id);
+		if(userOP.isPresent()){
+			throw new ExceptionApi400("username", "user가 없어요 ");
+		}
+		return userOP.get();
 	}
 }
