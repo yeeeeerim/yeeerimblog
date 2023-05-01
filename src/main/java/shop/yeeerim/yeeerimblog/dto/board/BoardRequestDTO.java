@@ -5,7 +5,7 @@ import lombok.Setter;
 import shop.yeeerim.yeeerimblog.model.board.Board;
 import shop.yeeerim.yeeerimblog.model.user.User;
 
-public class BoardRequest {
+public class BoardRequestDTO {
 	@Getter @Setter
 	public static class SaveInDTO{
 		private String title;
@@ -19,5 +19,11 @@ public class BoardRequest {
 					.thumbnail(thumbnail)
 					.build();
 		}
+	}
+	@Getter @Setter
+	public static class UpdateInDTO{
+		private Long id;
+		private String content;
+		private String title;
 	}
 }

@@ -9,5 +9,7 @@ import java.util.Optional;
 public interface LoveRepository extends JpaRepository<Love,Long> {
 	boolean existsByBoardIdAndUserId(@Param("boardId")Long boardId,@Param("userId")Long userId);
 	Optional<Love> findByUserIdAndBoardId(Long userId, Long boardId);
+	Long countLoveByBoard_Id(Long boardId);
+
 
 }

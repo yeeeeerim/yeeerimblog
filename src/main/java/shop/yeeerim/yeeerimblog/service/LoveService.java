@@ -38,6 +38,10 @@ public class LoveService {
 		loveRepository.deleteById(love.getId());
 	}
 
+	public Long countLove(Long boardId){
+		return loveRepository.countLoveByBoard_Id(boardId);
+	}
+
 
 
 

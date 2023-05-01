@@ -2,7 +2,6 @@ package shop.yeeerim.yeeerimblog.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.yeeerim.yeeerimblog.core.exception.ssr.Exception400;
@@ -10,15 +9,12 @@ import shop.yeeerim.yeeerimblog.core.exception.ssr.Exception400;
 import shop.yeeerim.yeeerimblog.core.exception.ssr.Exception403;
 import shop.yeeerim.yeeerimblog.core.exception.ssr.Exception500;
 import shop.yeeerim.yeeerimblog.core.util.MyParseUtil;
-import shop.yeeerim.yeeerimblog.dto.board.BoardRequest;
+import shop.yeeerim.yeeerimblog.dto.board.BoardRequestDTO;
 import shop.yeeerim.yeeerimblog.model.board.Board;
 import shop.yeeerim.yeeerimblog.model.board.BoardQueryRepository;
 import shop.yeeerim.yeeerimblog.model.board.BoardRepository;
 import shop.yeeerim.yeeerimblog.model.user.User;
 import shop.yeeerim.yeeerimblog.model.user.UserRepository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +25,7 @@ public class BoardService {
 	private final BoardQueryRepository boardQueryRepository;
 
 	@Transactional
-	public void 글쓰기(BoardRequest.SaveInDTO saveInDTO,Long userId){
+	public void 글쓰기(BoardRequestDTO.SaveInDTO saveInDTO, Long userId){
 		try{
 			User userPS= userRepository.findById(userId).orElseThrow(
 					()-> new RuntimeException("유저를 찾을 수 없습니다. ")
@@ -85,6 +81,23 @@ public class BoardService {
 			boardRepository.deleteById(id);
 		}catch (Exception e){
 			throw new Exception500("게시글 삭제 실패 : "+e.getMessage());
+		}
+	}
+
+	@Transactional
+	public void 게시글수정(BoardRequestDTO.UpdateInDTO updateInDTO,Long userId){
+		try{
+			Board boardPS = boardRepository.findByIdFetchUser(updateInDTO.getId()).orElseThrow(
+					()-> new Exception400("id", "게시글 아이디를 찾을 수 없습니다")
+			);
+			if(boardPS.getUser().getId() != userId){
+				throw new Exception403("권한이 없습니다");
+			}
+			String thumbnail = MyParseUtil.getThumbnail(updateInDTO.getContent());
+			boardPS.updateBoard(updateInDTO.getTitle(), updateInDTO.getContent(),thumbnail);
+			boardRepository.save(boardPS);
+		}catch (Exception e){
+			throw new Exception500("게시글 수정 실패 : "+e.getMessage());
 		}
 	}
 }

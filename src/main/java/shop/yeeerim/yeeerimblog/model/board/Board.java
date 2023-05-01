@@ -36,4 +36,11 @@ public class Board {
 	protected void onUpdate() {
 		this.updatedAt = LocalDateTime.now();
 	}
+
+	public void updateBoard(String title, String content, String thumbnail){
+		this.title=title;
+		this.content=content;
+		this.thumbnail=thumbnail;
+	}
+
 }

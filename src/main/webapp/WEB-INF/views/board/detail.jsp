@@ -36,10 +36,12 @@
 
     <c:if test="${love == true}">
         <i id="heart" class="fas fa-heart fa-lg" style="color: red;"></i>
+
     </c:if>
     <c:if test="${love == false}">
         <i id="heart" class="fa-regular fa-heart fa-lg"></i>
     </c:if>
+    <div id="like-count">좋아요 ${loveCount}개</div>
 
     <div class="card mt-3">
         <form action="/s/reply/save" method="post">
@@ -77,7 +79,10 @@
     const loveValue = ${love};
     const boardId = ${board.id};
     const user=${sessionUser.id};
-    if(!loveValue&(user!=null)){
+    if(!user){
+        alert("로그인하세요")
+    }
+    if(!loveValue){
         heartIcon.addEventListener("click",sendLove);
         console.log(user);
     }
