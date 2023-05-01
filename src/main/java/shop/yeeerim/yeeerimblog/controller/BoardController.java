@@ -17,6 +17,7 @@ import shop.yeeerim.yeeerimblog.dto.board.BoardRequest;
 import shop.yeeerim.yeeerimblog.dto.reply.ReplyResponseDTO;
 import shop.yeeerim.yeeerimblog.model.board.Board;
 import shop.yeeerim.yeeerimblog.service.BoardService;
+import shop.yeeerim.yeeerimblog.service.LoveService;
 import shop.yeeerim.yeeerimblog.service.ReplyService;
 
 import java.util.List;
@@ -27,14 +28,11 @@ import java.util.List;
 public class BoardController {
 	private final BoardService boardService;
 	private final ReplyService replyService;
+	private final LoveService loveService;
 
 	//RestAPI 주소설계 규칙에서는 자원에 복수를 붙인다. boards 정석 !
 	@GetMapping({"/","board"})
-	public String main(
-			@RequestParam(defaultValue = "0") Integer page,
-			@RequestParam(defaultValue = " ") String keyword,
-			Model model
-	){
+	public String main(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = " ") String keyword, Model model){
 
 		Page<Board> boardPG=boardService.글목록보기(page, keyword);
 		model.addAttribute("boardPG",boardPG);
@@ -54,11 +52,19 @@ public class BoardController {
 	}
 
 	@GetMapping( "/board/{id}")
-	public String detail(@PathVariable Long id, Model model){
+	public String detail(@PathVariable Long id, Model model,@AuthenticationPrincipal MyUserDetails myUserDetails){
+
+		boolean like = false;
+		if(myUserDetails!=null){
+			Long userId=myUserDetails.getUser().getId();
+			like = loveService.findLove(id,userId);
+		}
 		Board board = boardService.게시글상세보기(id);
 		List<ReplyResponseDTO> replyList=replyService.replyList(id);
 		model.addAttribute("board", board);
 		model.addAttribute("reply",replyList);
+		model.addAttribute("love",like);
+
 		return "board/detail";
 	}
 

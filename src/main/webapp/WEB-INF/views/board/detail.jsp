@@ -33,7 +33,13 @@
         <div>${board.content}</div>
     </div>
     <hr/>
-    <i id="heart" class="fa-regular fa-heart fa-lg"></i>
+
+    <c:if test="${love == true}">
+        <i id="heart" class="fas fa-heart fa-lg" style="color: red;"></i>
+    </c:if>
+    <c:if test="${love == false}">
+        <i id="heart" class="fa-regular fa-heart fa-lg"></i>
+    </c:if>
 
     <div class="card mt-3">
         <form action="/s/reply/save" method="post">
@@ -65,5 +71,77 @@
 
     </div>
 </div>
+
+<script>
+    const heartIcon = document.getElementById("heart");
+    const loveValue = ${love};
+    const boardId = ${board.id};
+    const user=${sessionUser.id};
+    if(!loveValue&(user!=null)){
+        heartIcon.addEventListener("click",sendLove);
+        console.log(user);
+    }
+    else{
+        heartIcon.addEventListener("click",deleteLove);
+    }
+    function sendLove() {
+        console.log(user);
+        fetch("/s/love/save", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                boardId: boardId,
+                userId:user
+            }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(() => {
+                // 좋아요 수 등의 UI 업데이트를 수행합니다.
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            })
+            .finally(() => {
+                window.location.reload();
+            });
+    }
+
+    function deleteLove() {
+
+        fetch("/s/love/delete", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                boardId: boardId,
+                userId:user
+            }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(() => {
+                // 좋아요 수 등의 UI 업데이트를 수행합니다.
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            })
+            .finally(() => {
+                window.location.reload();
+            });
+    }
+
+</script>
 
 <%@ include file="../layout/footer.jsp" %>
