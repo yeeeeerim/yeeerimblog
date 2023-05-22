@@ -21,8 +21,8 @@ jobs:
         with:
           java-version: 11  # 원하는 Java 버전으로 변경 가능
 
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
+      - name: Build with Gradle
+        run: ./gradlew build
 
       - name: Run Tests
-        run: mvn test --file pom.xml
+        run: ./gradlew test
